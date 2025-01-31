@@ -1,6 +1,9 @@
 package dto
 
-import "github.com/google/uuid"
+import (
+	"github.com/ChunHou23/catalogue-service/internal/models/enums"
+	"github.com/google/uuid"
+)
 
 type ProductResponseDto struct {
 	ID              uuid.UUID `json:"id"`
@@ -14,3 +17,11 @@ type ProductResponseDto struct {
 type ProductDetailResponseDto struct{}
 
 type ProductCreateResponseDto struct{}
+
+type BusinessResponseDto struct {
+	ID             uuid.UUID                `json:"id"`
+	Name           string                   `json:"name"`
+	Description    string                   `json:"description"`
+	BusinessNature enums.BusinessNatureType `json:"business_nature"`
+	Products       []ProductResponseDto
+}

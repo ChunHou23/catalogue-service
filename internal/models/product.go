@@ -1,11 +1,8 @@
 package models
 
 import (
-	"time"
-
 	"github.com/ChunHou23/catalogue-service/internal/base"
 	"github.com/google/uuid"
-	"gorm.io/gorm"
 )
 
 type Product struct {
@@ -20,22 +17,4 @@ type Product struct {
 
 func (product *Product) TableName() string {
 	return "products"
-}
-
-func (p *Product) BeforeCreate(tx *gorm.DB) (err error) {
-	if p.ID == uuid.Nil {
-		p.ID = uuid.New()
-	}
-
-	if p.CreatedAt.IsZero() {
-		p.CreatedAt = time.Now()
-	}
-
-	if p.UpdatedAt.IsZero() {
-		p.UpdatedAt = time.Now()
-	}
-
-	p.BusinessId = uuid.New()
-
-	return nil
 }

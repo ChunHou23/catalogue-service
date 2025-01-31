@@ -12,8 +12,10 @@ func SetupControllers(appConfig *config.AppConfig) http.Handler {
 	router := chi.NewRouter()
 
 	productController := controller.NewProductController(appConfig)
+	businessController := controller.NewBusinessController(appConfig)
 
 	productController.SetupRoutes(router)
+	businessController.SetupRoutes(router)
 
 	return router
 }

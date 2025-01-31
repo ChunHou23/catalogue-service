@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/ChunHou23/catalogue-service/internal/base/driver"
 	"github.com/ChunHou23/catalogue-service/internal/base/setup"
 	"github.com/ChunHou23/catalogue-service/internal/config"
 )
@@ -20,6 +21,8 @@ func main() {
 	appConfig.InfoLog = infoLog
 	appConfig.ErrorLog = errorLog
 	appConfig.InProduction = false
+
+	driver.InitDBInstance()
 
 	srv := &http.Server{
 		Addr:    ":8080",

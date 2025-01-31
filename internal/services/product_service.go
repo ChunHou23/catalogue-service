@@ -26,7 +26,7 @@ func NewProductService(appConfig *config.AppConfig) *ProductService {
 }
 
 func (productService *ProductService) GetAllProducts(w http.ResponseWriter, r *http.Request) {
-	products, err := productService.productRepository.GetAllProducts()
+	products, err := productService.productRepository.FindAll()
 	if err != nil {
 		productService.appConfig.ErrorLog.Printf("Error retrieving products: %v", err)
 		http.Error(w, "Error retrieving products", http.StatusInternalServerError)
@@ -41,7 +41,7 @@ func (productService *ProductService) GetAllProducts(w http.ResponseWriter, r *h
 
 	var productDTOs []dto.ProductResponseDto
 	for _, product := range products {
-		productDTOs = append(productDTOs, mapper.MapProductToDTO(product))
+		productDTOs = append(productDTOs, mapper.MapProductEntityToDTO(product))
 	}
 
 	productService.returnResponse(w, productDTOs)
@@ -55,14 +55,14 @@ func (productService *ProductService) GetProductById(w http.ResponseWriter, r *h
 		return
 	}
 
-	product, err := productService.productRepository.GetProductById(productId)
+	product, err := productService.productRepository.FindById(productId)
 	if err != nil {
 		productService.appConfig.ErrorLog.Printf("Error retrieving products: %v", err)
 		http.Error(w, "Error retrieving products", http.StatusInternalServerError)
 		return
 	}
 
-	productService.returnResponse(w, mapper.MapProductToDTO(product))
+	productService.returnResponse(w, mapper.MapProductEntityToDTO(product))
 }
 
 func (productService *ProductService) GetProductByBusinessId(w http.ResponseWriter, r *http.Request) {
@@ -82,7 +82,7 @@ func (productService *ProductService) GetProductByBusinessId(w http.ResponseWrit
 
 	var productDTOs []dto.ProductResponseDto
 	for _, product := range products {
-		productDTOs = append(productDTOs, mapper.MapProductToDTO(product))
+		productDTOs = append(productDTOs, mapper.MapProductEntityToDTO(product))
 	}
 
 	productService.returnResponse(w, productDTOs)
@@ -98,7 +98,7 @@ func (productService *ProductService) CreateProduct(w http.ResponseWriter, r *ht
 	}
 
 	productService.appConfig.InfoLog.Printf("Creating product: %v", createProductRequestDto)
-	err = productService.productRepository.CreateProduct(mapper.MapDtoToEntity(createProductRequestDto))
+	err = productService.productRepository.Create(mapper.CreateNewProductEntity(createProductRequestDto))
 
 	if err != nil {
 		productService.appConfig.ErrorLog.Printf("Error creating product: %v", err)
@@ -117,7 +117,7 @@ func (productService *ProductService) UpdateProduct(w http.ResponseWriter, r *ht
 		return
 	}
 
-	product, err := productService.productRepository.GetProductById(productId)
+	product, err := productService.productRepository.FindById(productId)
 	if err != nil {
 		productService.appConfig.ErrorLog.Printf("Error retrieving product: %v", err)
 		http.Error(w, "Error retrieving product", http.StatusInternalServerError)
@@ -139,7 +139,7 @@ func (productService *ProductService) UpdateProduct(w http.ResponseWriter, r *ht
 	}
 
 	productService.appConfig.InfoLog.Printf("Updating product: %v", updateProductRequestDto)
-	err = productService.productRepository.UpdateProduct(mapper.MapDtoToEntityForUpdate(&product, updateProductRequestDto))
+	err = productService.productRepository.Update(mapper.UpdateProductEntity(&product, updateProductRequestDto))
 
 	if err != nil {
 		productService.appConfig.ErrorLog.Printf("Error updating product: %v", err)

@@ -5,7 +5,7 @@ import (
 	"github.com/ChunHou23/catalogue-service/internal/models/dto"
 )
 
-func MapProductToDTO(productEntity models.Product) dto.ProductResponseDto {
+func MapProductEntityToDTO(productEntity models.Product) dto.ProductResponseDto {
 	return dto.ProductResponseDto{
 		ID:              productEntity.ID,
 		Name:            productEntity.Name,
@@ -16,7 +16,15 @@ func MapProductToDTO(productEntity models.Product) dto.ProductResponseDto {
 	}
 }
 
-func MapDtoToEntity(createProductRequestDto dto.CreateProductRequestDto) models.Product {
+func MapListOfProductEntitiesToDTOs(productEntities []models.Product) []dto.ProductResponseDto {
+	var productDTOs []dto.ProductResponseDto
+	for _, product := range productEntities {
+		productDTOs = append(productDTOs, MapProductEntityToDTO(product))
+	}
+	return productDTOs
+}
+
+func CreateNewProductEntity(createProductRequestDto dto.CreateProductRequestDto) models.Product {
 	return models.Product{
 		Name:            createProductRequestDto.Name,
 		Description:     createProductRequestDto.Description,
@@ -26,7 +34,7 @@ func MapDtoToEntity(createProductRequestDto dto.CreateProductRequestDto) models.
 	}
 }
 
-func MapDtoToEntityForUpdate(product *models.Product, updateProductRequestDto dto.UpdateProductRequestDto) models.Product {
+func UpdateProductEntity(product *models.Product, updateProductRequestDto dto.UpdateProductRequestDto) models.Product {
 	product.Available = updateProductRequestDto.Available
 	product.Description = updateProductRequestDto.Description
 	product.Name = updateProductRequestDto.Name
