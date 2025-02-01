@@ -25,3 +25,18 @@ type BusinessResponseDto struct {
 	BusinessNature enums.BusinessNatureType `json:"business_nature"`
 	Products       []ProductResponseDto
 }
+
+type CartResponseDto struct {
+	ID         uuid.UUID             `json:"id"`
+	Name       string                `json:"name"`
+	TotalPrice float64               `json:"total_price"`
+	Active     bool                  `json:"active"`
+	CartItem   []CartItemResponseDto `json:"cart_item"`
+}
+
+type CartItemResponseDto struct {
+	ID       uuid.UUID          `json:"id"`
+	Name     string             `json:"name"`
+	Quantity int                `json:"quantity"`
+	Product  ProductResponseDto `json:"product"`
+}

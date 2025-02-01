@@ -31,9 +31,14 @@ func (r *BaseRepository[T]) FindAll(eagerLoading ...string) ([]T, error) {
 	return result, nil
 }
 
-func (r *BaseRepository[T]) FindById(id uuid.UUID) (T, error) {
+func (r *BaseRepository[T]) FindById(id uuid.UUID, eagerLoading ...string) (T, error) {
 	var result T
-	if err := r.DB.First(result, id).Error; err != nil {
+	query := r.DB
+	for _, preload := range eagerLoading {
+		query = query.Preload(preload)
+	}
+
+	if err := query.First(&result, id).Error; err != nil {
 		return result, err
 	}
 
@@ -41,21 +46,21 @@ func (r *BaseRepository[T]) FindById(id uuid.UUID) (T, error) {
 }
 
 func (r *BaseRepository[T]) Create(data T) error {
-	if err := r.DB.Create(data).Error; err != nil {
+	if err := r.DB.Create(&data).Error; err != nil {
 		return err
 	}
 	return nil
 }
 
 func (r *BaseRepository[T]) Update(data T) error {
-	if err := r.DB.Save(data).Error; err != nil {
+	if err := r.DB.Save(&data).Error; err != nil {
 		return err
 	}
 	return nil
 }
 
 func (r *BaseRepository[T]) Delete(data T) error {
-	if err := r.DB.Delete(data).Error; err != nil {
+	if err := r.DB.Delete(&data).Error; err != nil {
 		return err
 	}
 	return nil

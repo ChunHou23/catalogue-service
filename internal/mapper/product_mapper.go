@@ -31,6 +31,7 @@ func CreateNewProductEntity(createProductRequestDto dto.CreateProductRequestDto)
 		Price:           createProductRequestDto.Price,
 		Available:       createProductRequestDto.Available,
 		ProductCategory: createProductRequestDto.ProductCategory,
+		BusinessId:      createProductRequestDto.BusinessId,
 	}
 }
 
